@@ -9,3 +9,9 @@ Upload a single file from a specific local director to a specifc directory on EC
     - Change bindIP to `bindIp: 127.0.0.1;52.37.233.74;10.26.175.35`
 
 Refer to this Piazza Post: https://piazza.com/class/lcnpg1xru9v6jg/post/413 
+
+## Trouble Shooting onnecting to MongoDB Atlas using PyMongo Pyhton Driver
+Refer to this Piazza Post: https://piazza.com/class/lcnpg1xru9v6jg/post/649
+- Chnage the user access from `readAndWriteOnly` to `admin`
+- Really ensure that you whitelist the correct IP adresses:
+    - You can whitelist all IPs using `0.0.0.0/0`
