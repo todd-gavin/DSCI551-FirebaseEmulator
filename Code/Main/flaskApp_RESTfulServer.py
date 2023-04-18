@@ -1,6 +1,11 @@
 # TODO:
 # 1/ Implement GET filter functions
 # 2/ Error handling for when request methods are incorrect, data is incorrect (needs to match Firebase)
+# 3/ Record 10 min Demo Video and upload to Youtube publicly
+# 4/ Complete Self Assessment Form
+# 5/ Write out final report and ReadMe file
+
+# https://piazza.com/class/lcnpg1xru9v6jg/post/678
 
 # Need to handle this case fo data where its just a string
 # curl -X PUT 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/name.json' -d '"david smith sr"'
