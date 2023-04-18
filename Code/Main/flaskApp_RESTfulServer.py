@@ -1,9 +1,14 @@
 # TODO:
-# 1/ Error handling for when request methods are incorrect, data is incorrect
-# 2/ Print out data whenever any write function occurs
-# 3/ Create filter functions
-# 4/ Create streamlit GUI for CLI
+# 1/ Implement GET filter functions
+# 2/ Error handling for when request methods are incorrect, data is incorrect (needs to match Firebase)
 
+# Need to handle this case fo data where its just a string
+# curl -X PUT 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/name.json' -d '"david smith sr"'
+# "david smith sr"
+
+# Need to handle this case where there is `.json` at the ned of the jsonPath
+# curl -X DELETE 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/gender.json'
+# null
 
 from mongoDB_driver import connectMongoDB, db_collection_document, get, put, post, patch, delete
 
@@ -45,7 +50,8 @@ def handle_request(path):
         jsonPath = path_params[0]
     else:
         jsonPath = ".".join(path_params)
-    print(f"Log: jsonPath = {jsonPath}")
+    jsonPath = jsonPath.replace(".json", "")
+    print(f"Log: jsonPath = {jsonPath}") 
 
     # Get the data from the CURL command
     data = request.get_json()
@@ -68,7 +74,7 @@ def handle_request(path):
         else:
             print('Log: POST request received without data')
         print("Log: POST Executed")
-        return 'POST request received'
+        return str(data) + '\nPOST request received'
     
     # curl -X PUT 'http://127.0.0.1:5000/users/' -d '{"105": {"name": "Amanda", "age": 22}}' 
     elif request.method == 'PUT':
@@ -78,7 +84,7 @@ def handle_request(path):
         else:
             print('Log: PUT request received without data')
         print("Log: PUT Executed")
-        return 'PUT request received'
+        return str(data) + '\nPUT request received'
     
     # curl -X PATCH 'http://127.0.0.1:5000/users/105/' -d '{"age": 26}' 
     elif request.method == "PATCH":
@@ -88,13 +94,15 @@ def handle_request(path):
         else:
             print('Log: PATCH request received without data')
         print("Log: PATCH Executed")
-        return 'PATCH request received'
+        return str(data) + '\nPATCH request received'
     
     # curl -X DELETE 'http://127.0.0.1:5000/users/105/'
     elif request.method == 'DELETE':
+        get_result = get(collection, documentFilter, jsonPath, filter=None)[0]
+        print(f"Log: get_result that is delete {get_result}")
         delete(collection, documentFilter, jsonPath)
         print("Log: DELETE Executed")
-        return 'DELETE request received'
+        return 'null \nDELETE request received'
     
     else:
         return 'Invalid request'
