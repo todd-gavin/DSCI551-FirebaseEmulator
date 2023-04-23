@@ -1,13 +1,10 @@
 # TODO:
 # 1/ Implement GET filter functions
+# 1.5/ Handle GET without "GET" method provided
 # 2/ Error handling for when request methods are incorrect, data is incorrect (needs to match Firebase)
-
-# In-Class 10 min Demo (Monday, 4/24)
-# https://docs.google.com/spreadsheets/d/1t9p8zpgRczI_eaU93ITpNoTua_le2SixVLKsVrCm7ro/edit#gid=0 
-
-# 3/ Record 20 min Demo Video and upload to Youtube publicly (Friday, 4/28)
-# 4/ Complete Self Assessment Form part of final report (Friday, 4/28)
-# 5/ Write out final report, ReadMe file, and include source code (Friday, 4/28)
+# 3/ Record 10 min Demo Video and upload to Youtube publicly
+# 4/ Complete Self Assessment Form
+# 5/ Write out final report and ReadMe file
 
 # https://piazza.com/class/lcnpg1xru9v6jg/post/678
 
@@ -15,7 +12,11 @@
 # curl -X PUT 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/name.json' -d '"david smith sr"'
 # "david smith sr"
 
-from mongoDB_driver_v2 import connectMongoDB, db_collection_document, get, put, post, patch, delete
+# Need to handle this case where there is `.json` at the ned of the jsonPath
+# curl -X DELETE 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/gender.json'
+# null
+
+from mongoDB_driver import connectMongoDB, db_collection_document, get, put, post, patch, delete
 
 from flask import Flask, request, jsonify
 
@@ -62,38 +63,14 @@ def handle_request(path):
     data = request.get_json()
 
     # Check the request method, execute respective function to sed request method
-    print(f"Request method: {request.method}")
 
     # curl -X GET 'http://127.0.0.1:5000/'
     # curl -X GET 'http://127.0.0.1:5000/users/'
-    # if request.method == 'GET' or request.method == '':
-    #     get_result = get(collection, documentFilter, jsonPath, filter=None)[0]
-    #     print("Log: GET Executed")
-    #     print(f"Log: get_result = {get_result}")
-    #     return str(get_result) + "\n"
-    
-    if request.method == 'GET' or request.method == '':
-        # Extract filter parameters from URL
-        filter_params = {
-            'orderBy': request.args.get('orderBy'),
-            'limitToFirst': int(request.args.get('limitToFirst')) if request.args.get('limitToFirst') else None,
-            'limitToLast': int(request.args.get('limitToLast')) if request.args.get('limitToLast') else None,
-            'equalTo': request.args.get('equalTo'),
-            'startAt': request.args.get('startAt'),
-            'endAt': request.args.get('endAt')
-        }
-
-        print(f"Filter Params1: {filter_params}")
-
-        # Remove None values from the dictionary
-        filter_params = {k: v for k, v in filter_params.items() if v is not None}
-
-        print(f"Filter Params2: {filter_params}")
-
-        get_result = get(collection, documentFilter, jsonPath, filter=filter_params if filter_params else None)
+    if request.method == 'GET':
+        get_result = get(collection, documentFilter, jsonPath, filter=None)[0]
         print("Log: GET Executed")
         print(f"Log: get_result = {get_result}")
-        return str(get_result) + "\n"
+        return str(get_result)
     
     # curl -X POST 'http://127.0.0.1:5000/users/' -d '{"106": {"name": "Amanda", "age": 22}}'
     elif request.method == 'POST':
@@ -103,7 +80,7 @@ def handle_request(path):
         else:
             print('Log: POST request received without data')
         print("Log: POST Executed")
-        return str(data) + '\nPOST request received' + "\n"
+        return str(data) + '\nPOST request received'
     
     # curl -X PUT 'http://127.0.0.1:5000/users/' -d '{"105": {"name": "Amanda", "age": 22}}' 
     elif request.method == 'PUT':
@@ -113,7 +90,7 @@ def handle_request(path):
         else:
             print('Log: PUT request received without data')
         print("Log: PUT Executed")
-        return str(data) + '\nPUT request received' + "\n"
+        return str(data) + '\nPUT request received'
     
     # curl -X PATCH 'http://127.0.0.1:5000/users/105/' -d '{"age": 26}' 
     elif request.method == "PATCH":
@@ -123,7 +100,7 @@ def handle_request(path):
         else:
             print('Log: PATCH request received without data')
         print("Log: PATCH Executed")
-        return str(data) + '\nPATCH request received' + "\n"
+        return str(data) + '\nPATCH request received'
     
     # curl -X DELETE 'http://127.0.0.1:5000/users/105/'
     elif request.method == 'DELETE':
@@ -131,7 +108,7 @@ def handle_request(path):
         print(f"Log: get_result that is delete {get_result}")
         delete(collection, documentFilter, jsonPath)
         print("Log: DELETE Executed")
-        return 'null \nDELETE request received' + "\n"
+        return 'null \nDELETE request received'
     
     else:
         return 'Invalid request'
