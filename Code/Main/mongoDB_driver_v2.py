@@ -95,10 +95,12 @@ def helper_filter(data, filter_params):
             # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="name"'
             return {"error" : "Constraint key field must be a valid key name"}
         
-        if ('startAt' not in filter_params and 'endAt' not in filter_params and 'equalTo' not in filter_params) and ('limitToFirst' in filter_params and 'limitToLast' in filter_params):
+        if 'orderBy' in filter_params and len(filter_params) == 1:
+            print(f"Log monogDB_driver.py: completed orderBy WITHOUT addtional parameters")
             return final_list
         
-        print(f"Log monogDB_driver.py: completed orderBy without addtional parameters")
+        if ('startAt' not in filter_params and 'endAt' not in filter_params and 'equalTo' not in filter_params) and ('limitToFirst' in filter_params and 'limitToLast' in filter_params):
+            return final_list
         
         # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&equalTo=102'
         equalTo_list = []
@@ -106,8 +108,7 @@ def helper_filter(data, filter_params):
             equalTo = filter_params.get('equalTo')
             equalTo_list = [key for key in orderBy_list if equalTo in key]
             final_list = equalTo_list
-
-        print(f"Log monogDB_driver.py: completed equalTo")
+            print(f"Log monogDB_driver.py: completed equalTo WITHOUT addtional parameters")
 
         if ('limitToFirst' not in filter_params and 'limitToLast' not in filter_params) and ('startAt' not in filter_params and 'endAt' not in filter_params):
             print(f"Log monogDB_driver.py: returning final_list WITHOUT limitToFirst, limitToLast, startAt, and endAt")
@@ -251,7 +252,7 @@ def get(collection, documentFilter, jsonPath, filter=None):
         return result
     else:
         filtered_result = helper_filter(result, filter)
-        return filtered_result[0]
+        return filtered_result
 
 #############################
 # PUT
@@ -312,7 +313,7 @@ def post(collection, documentFilter, jsonPath, data):
 def patch(collection, documentFilter, jsonPath, data):
     # get the current json within the jsonPath and rewrite/add the data
 
-    currentData = get(collection, documentFilter, jsonPath, None)[0]
+    currentData = get(collection, documentFilter, jsonPath, None)
     merged_data = currentData.copy()
     merged_data.update(data)
 

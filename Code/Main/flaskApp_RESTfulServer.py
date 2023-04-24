@@ -15,6 +15,9 @@
 # curl -X PUT 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/name.json' -d '"david smith sr"'
 # "david smith sr"
 
+##########
+# May stll need to implement pretty=json, startAfter, and endBefore, and sort by name field
+
 from mongoDB_driver_v2 import connectMongoDB, db_collection_document, get, put, post, patch, delete
 
 from flask import Flask, request, jsonify
@@ -138,8 +141,7 @@ def handle_request(path):
         delete(collection, documentFilter, jsonPath)
         print("Log: DELETE Executed")
         return 'null\n'
-        # return 'null \nDELETE request received' + "\n"
-    
+        # return 'null \nDELETE request received' + "\n"    
     
     else:
         return 'Invalid request'
