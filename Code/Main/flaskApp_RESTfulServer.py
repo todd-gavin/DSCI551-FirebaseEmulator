@@ -15,7 +15,7 @@
 # curl -X PUT 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/name.json' -d '"david smith sr"'
 # "david smith sr"
 
-from mongoDB_driver_v2 import connectMongoDB, db_collection_document, get, put, post, patch, delete
+from mongoDB_driver import connectMongoDB, db_collection_document, get, put, post, patch, delete
 
 from flask import Flask, request, jsonify
 
@@ -91,6 +91,7 @@ def handle_request(path):
         print(f"Filter Params2: {filter_params}")
 
         get_result = get(collection, documentFilter, jsonPath, filter=filter_params if filter_params else None)
+        
         print("Log: GET Executed")
         print(f"Log: get_result = {get_result}")
         return str(get_result) + "\n"
