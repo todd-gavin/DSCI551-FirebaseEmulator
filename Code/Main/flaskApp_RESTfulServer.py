@@ -15,7 +15,7 @@
 # curl -X PUT 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/name.json' -d '"david smith sr"'
 # "david smith sr"
 
-from mongoDB_driver import connectMongoDB, db_collection_document, get, put, post, patch, delete
+from mongoDB_driver_v2 import connectMongoDB, db_collection_document, get, put, post, patch, delete
 
 from flask import Flask, request, jsonify
 
@@ -76,17 +76,18 @@ def handle_request(path):
         # Extract filter parameters from URL
         filter_params = {
             'orderBy': request.args.get('orderBy'),
-            'limitToFirst': int(request.args.get('limitToFirst')) if request.args.get('limitToFirst') else None,
-            'limitToLast': int(request.args.get('limitToLast')) if request.args.get('limitToLast') else None,
+            'limitToFirst': request.args.get('limitToFirst') if request.args.get('limitToFirst') else None,
+            'limitToLast': request.args.get('limitToLast') if request.args.get('limitToLast') else None,
             'equalTo': request.args.get('equalTo'),
             'startAt': request.args.get('startAt'),
-            'endAt': request.args.get('endAt')
         }
 
         print(f"Filter Params1: {filter_params}")
 
         # Remove None values from the dictionary
         filter_params = {k: v for k, v in filter_params.items() if v is not None}
+        filter_params = {key: str(value) for key, value in filter_params.items()}
+        filter_params = {k: v.replace('"', '') for k, v in filter_params.items()}
 
         print(f"Filter Params2: {filter_params}")
 

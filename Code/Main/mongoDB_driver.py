@@ -67,9 +67,9 @@ def helper_filter(orderBy=None, limit=None, equalTo=None, startAt=None, endAt=No
 def get(collection, documentFilter, jsonPath, filter=None):
     if filter is None:
         if jsonPath == '':
-            result = list(collection.find(documentFilter))
+            result = list(collection.find(documentFilter))[0]
         else: 
-            result = collection.find(documentFilter).distinct(jsonPath)
+            result = collection.find(documentFilter).distinct(jsonPath)[0]
     else:
         filter = helper_filter(**filter)
         result = collection.find({'$and': [documentFilter, filter]}).distinct(jsonPath)

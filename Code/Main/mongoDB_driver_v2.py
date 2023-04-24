@@ -45,63 +45,163 @@ def db_collection_document(client, db_name, collection_name, objectId):
 #############################
 # GET
 #############################
-def helper_filter(collection, orderBy=None, limitToFirst=None, limitToLast=None, equalTo=None, startAt=None, endAt=None):
-    filter = {}
-    sort_order = None
-    limit = None  # Initialize limit variable here
 
-    if orderBy:
-        if orderBy == '$key':
-            key = '_id'
-        elif orderBy == '$value':
-            raise ValueError("orderBy '$value' not supported. Please use a specific field name.")
-        else:
-            key = orderBy
-            # Create index for the orderBy field
-            collection.create_index([(key, ASCENDING)])
-
-        if startAt is not None:
-            filter[f'{key}'] = {'$gte': startAt}
-
-        if endAt is not None:
-            if f'{key}' in filter:
-                filter[f'{key}']['$lte'] = endAt
-            else:
-                filter[f'{key}'] = {'$lte': endAt}
-
-        if equalTo is not None:
-            filter[f'{key}'] = equalTo
-
-        if limitToFirst is not None and orderBy:
-            limit = limitToFirst
-            sort_order = ASCENDING
-        elif limitToLast is not None:
-            limit = limitToLast
-            sort_order = DESCENDING
-
-    return filter, limit, sort_order
-
-
-def get(collection, documentFilter, jsonPath, filter=None):
-    if filter is None:
-        if jsonPath == '':
-            result = list(collection.find(documentFilter))
-        else: 
-            result = collection.find(documentFilter).distinct(jsonPath)
+# Sort by numbers, than letters, than special characters, and then finally datatype
+def custom_sort_key(item):
+    key = list(item.keys())[0]
+    if key.isdigit():
+        return (0, int(key))
+    elif key.isalpha():
+        return (1, key)
+    elif isinstance(list(item.values())[0], (dict, list, tuple)):
+        return (3, key)
     else:
-        filter, limit, sort_order = helper_filter(collection, **filter)
-        if jsonPath == '':
-            if sort_order is not None:
-                result = list(collection.find({'$and': [documentFilter, filter]}).sort('_id', sort_order).limit(limit))
-            else:
-                result = list(collection.find({'$and': [documentFilter, filter]}))
-        else:
-            if sort_order is not None:
-                result = collection.find({'$and': [documentFilter, filter]}).sort('_id', sort_order).distinct(jsonPath)[:limit]
-            else:
-                result = collection.find({'$and': [documentFilter, filter]}).distinct(jsonPath)
-    return result
+        return (2, key)
+    
+def helper_filter(data, filter_params):
 
+    data_list = [{"{}".format(key): value} for key, value in data.items()]
+    data_values_list = [data[key] for key in data]
+    final_list = []
+
+    print(f"Log monogDB_driver.py: data_list = {data_list}")
+    print(f"Log monogDB_driver.py: data_values_list = {data_values_list}")
+    print(f"Log monogDB_driver.py: filter_params = {filter_params}")
+    
+    # if orderBy is NOT in filter_params BUT other filter params are, return error
+    if 'orderBy' not in filter_params and len(filter_params) > 0:
+        # curl -X GET 'http://127.0.0.1:5000/users.json?equalTo=age'
+        return {"error" : "orderBy must be defined when other query parameters are defined"}
+    
+    else:
+        if 'limitToFirst' in filter_params and 'limitToLast' in filter_params:
+            # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&limitToFirst=2&limitToLast=3'
+            return {"error" : "Only one of limitToFirst and limitToLast may be specified"}
+        
+        if 'equalTo' in filter_params and ('startAt' in filter_params or 'endAt' in filter_params or 'startAfter' in filter_params or 'endBefore' in filter_params):
+            # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&equalTo=102&startAt=13'
+            return {"error" : "equalTo cannot be specified in addition to startAfter, startAt, endAt, or endBefore"}
+
+        orderBy = filter_params.get('orderBy')
+        if orderBy == "$key":
+            orderBy_list = sorted(data_list, key=custom_sort_key)
+            final_list = orderBy_list
+            print(f"Log monogDB_driver.py: orderBy_list = {orderBy_list}")
+        elif orderBy == "$value":
+            orderBy_list = sorted(data_values_list, key=custom_sort_key)
+            final_list = orderBy_list
+            print(f"Log monogDB_driver.py: orderBy_list = {orderBy_list}")
+        else:
+            # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="name"'
+            return {"error" : "Constraint key field must be a valid key name"}
+        
+        if ('startAt' not in filter_params and 'endAt' not in filter_params and 'equalTo' not in filter_params) and ('limitToFirst' in filter_params and 'limitToLast' in filter_params):
+            return final_list
+        
+        print(f"Log monogDB_driver.py: completed orderBy without addtional parameters")
+        
+        equalTo_list = []
+        if 'equalTo' in filter_params:
+            equalTo = filter_params.get('equalTo')
+            equalTo_list = [key for key in orderBy_list if equalTo in key]
+            final_list = equalTo_list
+
+        print(f"Log monogDB_driver.py: completed equalTo")
+
+        if ('limitToFirst' not in filter_params and 'limitToLast' not in filter_params) and ('startAt' not in filter_params and 'endAt' not in filter_params):
+            print(f"Log monogDB_driver.py: returning final_list WITHOUT limitToFirst, limitToLast, startAt, and endAt")
+            return final_list
+        
+        else:
+            startAt_list = []    
+            if 'startAt' in filter_params:
+                startAt = filter_params.get("startAt")
+
+                print(f"Log monogDB_driver.py: startAt = {startAt}")
+
+                flag = False
+                for item in final_list:
+                    item_key = next(iter(item))
+                    if (str(item_key) == str(startAt) or float(item_key) >= float(startAt)) and flag == False:
+                        flag = True
+                        startAt_list.append(item)
+                    elif flag == True:
+                        startAt_list.append(item)
+
+                final_list = startAt_list
+
+            endAt_list = [] 
+            if 'endAt' in filter_params:
+                endAt = filter_params.get("endAt")
+
+                print(f"Log monogDB_driver.py: endAt = {endAt}")
+
+                flag = False
+                for item in final_list:
+                    # if item != endAt and flag == False:
+                    if (str(item) != str(endAt) or float(item) <= float(endAt)) and flag == False:
+                        endAt_list.append(item)
+                    else:
+                        flag = True
+
+                final_list = endAt_list
+
+        print(f"Log monogDB_driver.py: completed startAt and endAt")
+
+        if 'limitToFirst' in filter_params:
+            limitToFirst = filter_params.get("limitToFirst")
+
+            print(f"Log monogDB_driver.py: limitToFirst = {limitToFirst}")
+
+            limitToFirst_int = int(limitToFirst) if limitToFirst.isdigit() else {"error" : "limitToFirst must be an integer"}
+
+            print(f"Log monogDB_driver.py: limitToFirst_int = {limitToFirst_int}")
+
+            if isinstance(limitToFirst_int, dict):
+                return limitToFirst_int
+
+            if len(final_list) > limitToFirst_int:
+                return final_list[:limitToFirst_int]
+            else:
+                return final_list
+            
+        elif 'limitToLast' in filter_params: 
+            limitToLast = filter_params.get("limitToLast")
+
+            print(f"Log monogDB_driver.py: limitToLast = {limitToLast}")
+
+            limitToLast_int = int(limitToLast) if limitToLast.isdigit() else {"error" : "limitToLast must be an integer"}
+
+            print(f"Log monogDB_driver.py: limitToLast_int = {limitToLast_int}")
+
+            if isinstance(limitToLast_int, dict):
+                return limitToLast_int
+            
+            if len(final_list) > limitToLast_int:
+                return final_list[-limitToLast_int:]
+            else:
+                return final_list
+            
+        else:
+            print(f"Log monogDB_driver.py: completed WITHOUT limitToFirst and limitToLast")
+            return final_list
+        
+def get(collection, documentFilter, jsonPath, filter=None):
+
+    print(f"Log flaskApp_RESTfulServer.py: Starting GET...")
+    
+    if jsonPath == '':
+        result = list(collection.find(documentFilter))[0]
+    else: 
+        result = collection.find(documentFilter).distinct(jsonPath)[0]
+
+    print(f"Log flaskApp_RESTfulServer.py: Starting GET Filter...")
+
+    if filter is None:
+        return result
+    else:
+        filtered_result = helper_filter(result, filter)
+        return filtered_result
 
 #############################
 # PUT
