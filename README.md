@@ -38,3 +38,15 @@ Refer to this Piazza Post: https://piazza.com/class/lcnpg1xru9v6jg/post/649
 
 
 ### Command Line Interface
+
+### DEMO TESTING COMMANDS
+1. 
+2. 
+3. 
+4. 
+5. 
+6. 
+7. 
+8.
+9.
+10.

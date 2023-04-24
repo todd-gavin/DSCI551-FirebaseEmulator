@@ -100,6 +100,7 @@ def helper_filter(data, filter_params):
         
         print(f"Log monogDB_driver.py: completed orderBy without addtional parameters")
         
+        # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&equalTo=102'
         equalTo_list = []
         if 'equalTo' in filter_params:
             equalTo = filter_params.get('equalTo')
@@ -113,6 +114,7 @@ def helper_filter(data, filter_params):
             return final_list
         
         else:
+            # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&startAt=102&endAt=106'
             startAt_list = []    
             if 'startAt' in filter_params:
                 startAt = filter_params.get("startAt")
@@ -122,13 +124,38 @@ def helper_filter(data, filter_params):
                 flag = False
                 for item in final_list:
                     item_key = next(iter(item))
-                    if (str(item_key) == str(startAt) or float(item_key) >= float(startAt)) and flag == False:
-                        flag = True
-                        startAt_list.append(item)
-                    elif flag == True:
-                        startAt_list.append(item)
+                    print(f"Log monogDB_driver.py: item_key = {item_key}")
+
+                    # if (str(item_key) == str(startAt) or float(item_key) >= float(startAt)) and flag == False:
+
+                    # if (str(item_key) == str(startAt) or (isinstance(item_key, (int, float)) and float(item_key) >= float(startAt))) and flag == False:
+                    #     flag = True
+                    #     startAt_list.append(item)
+                    # elif flag == True:
+                    #     startAt_list.append(item)
+
+                    try:
+                        item_key = float(item_key)
+                        if (str(item_key) == str(startAt) or item_key >= float(startAt)) and flag == False:
+                            flag = True
+                            startAt_list.append(item)
+                        elif flag == True:
+                            startAt_list.append(item)
+
+                        print(f"Log monogDB_driver.py: ran try..")
+
+                    except:
+                        if (str(item_key) == str(startAt)) and flag == False:
+                            flag = True
+                            startAt_list.append(item)
+                        elif flag == True:
+                            startAt_list.append(item)
+
+                        print(f"Log monogDB_driver.py: ran except..")
 
                 final_list = startAt_list
+
+                print(f"Log monogDB_driver.py: startAt_list = {startAt_list}")
 
             endAt_list = [] 
             if 'endAt' in filter_params:
@@ -138,16 +165,38 @@ def helper_filter(data, filter_params):
 
                 flag = False
                 for item in final_list:
-                    # if item != endAt and flag == False:
-                    if (str(item) != str(endAt) or float(item) <= float(endAt)) and flag == False:
-                        endAt_list.append(item)
-                    else:
-                        flag = True
+                    item_key = next(iter(item))
+                    print(f"Log monogDB_driver.py: item_key = {item_key}")
+                    
+                    # if (str(item) != str(endAt) or float(item) <= float(endAt)) and flag == False:
+                    try:
+                        item_key = float(item_key)
+                        if (str(item_key) == str(endAt) or item_key >= float(endAt)) and flag == False:
+                            flag = True
+                            print("RAN1")
+                        elif flag == False:
+                            endAt_list.append(item)
+                            print("RAN2")
+
+                        print(f"Log monogDB_driver.py: ran try..")
+                        
+                    except:
+                        if (str(item_key) == str(endAt)) and flag == False:
+                            flag = True
+                            print("RAN1")
+                        elif flag == False:
+                            endAt_list.append(item)
+                            print("RAN2")
+
+                        print(f"Log monogDB_driver.py: ran except..")
 
                 final_list = endAt_list
 
+                print(f"Log monogDB_driver.py: endAt_list = {endAt_list}")
+
         print(f"Log monogDB_driver.py: completed startAt and endAt")
 
+        # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&startAt=102&endAt=106&limitToFirst=2'
         if 'limitToFirst' in filter_params:
             limitToFirst = filter_params.get("limitToFirst")
 
@@ -165,6 +214,7 @@ def helper_filter(data, filter_params):
             else:
                 return final_list
             
+        # curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&startAt=102&endAt=106&limitToLast=2'
         elif 'limitToLast' in filter_params: 
             limitToLast = filter_params.get("limitToLast")
 
@@ -201,7 +251,7 @@ def get(collection, documentFilter, jsonPath, filter=None):
         return result
     else:
         filtered_result = helper_filter(result, filter)
-        return filtered_result
+        return filtered_result[0]
 
 #############################
 # PUT

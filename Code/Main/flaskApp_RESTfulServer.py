@@ -80,6 +80,7 @@ def handle_request(path):
             'limitToLast': request.args.get('limitToLast') if request.args.get('limitToLast') else None,
             'equalTo': request.args.get('equalTo'),
             'startAt': request.args.get('startAt'),
+            'endAt': request.args.get('endAt')
         }
 
         print(f"Filter Params1: {filter_params}")
@@ -105,7 +106,8 @@ def handle_request(path):
         else:
             print('Log: POST request received without data')
         print("Log: POST Executed")
-        return str(data) + '\nPOST request received' + "\n"
+        return str(data) + '\n'
+        # return str(data) + '\nPOST request received' + "\n"
     
     # curl -X PUT 'http://127.0.0.1:5000/users/' -d '{"105": {"name": "Amanda", "age": 22}}' 
     elif request.method == 'PUT':
@@ -115,7 +117,8 @@ def handle_request(path):
         else:
             print('Log: PUT request received without data')
         print("Log: PUT Executed")
-        return str(data) + '\nPUT request received' + "\n"
+        return str(data) + '\n'
+        # return str(data) + '\nPUT request received' + "\n"
     
     # curl -X PATCH 'http://127.0.0.1:5000/users/105/' -d '{"age": 26}' 
     elif request.method == "PATCH":
@@ -125,7 +128,8 @@ def handle_request(path):
         else:
             print('Log: PATCH request received without data')
         print("Log: PATCH Executed")
-        return str(data) + '\nPATCH request received' + "\n"
+        return str(data) + '\n'
+        # return str(data) + '\nPATCH request received' + "\n"
     
     # curl -X DELETE 'http://127.0.0.1:5000/users/105/'
     elif request.method == 'DELETE':
@@ -133,7 +137,9 @@ def handle_request(path):
         print(f"Log: get_result that is delete {get_result}")
         delete(collection, documentFilter, jsonPath)
         print("Log: DELETE Executed")
-        return 'null \nDELETE request received' + "\n"
+        return 'null\n'
+        # return 'null \nDELETE request received' + "\n"
+    
     
     else:
         return 'Invalid request'
