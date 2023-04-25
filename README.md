@@ -54,15 +54,20 @@ curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&limitToFirst=2&limi
 curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&equalTo=102&startAt=13'
 curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="name"'
 
-WRITE DATA V1:
-2. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"108": {"name": "Johnny", "age": 33}}'
-3. curl -X PUT 'http://127.0.0.1:5000/users/106.json' -d '{"name": "Grace", "age": 42}'
-4. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"weatherType": "Sunny"}'
-5. curl -X PATCH 'http://127.0.0.1:5000/users/102.json' -d '{"name": "Jack", "height": 58}'
-
 WRITE DATA V2:
 2. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"109": {"name": "Miles", "age": 36}}'
 3. curl -X PUT 'http://127.0.0.1:5000/users/110.json' -d '{"name": "Jenny", "age": 20}'
 4. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"country": "USA"}'
 5. curl -X PATCH 'http://127.0.0.1:5000/users/102.json' -d '{"name": "Amanda", "location": "California"}'
+6. curl -X DELETE 'http://127.0.0.1:5000/users/110.json'
+
+NEED TO INCLUDE print=pretty
+
+---------------------------------------------
+
+WRITE DATA V1:
+2. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"108": {"name": "Johnny", "age": 33}}'
+3. curl -X PUT 'http://127.0.0.1:5000/users/106.json' -d '{"name": "Grace", "age": 42}'
+4. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"weatherType": "Sunny"}'
+5. curl -X PATCH 'http://127.0.0.1:5000/users/102.json' -d '{"name": "Jack", "height": 58}'
 

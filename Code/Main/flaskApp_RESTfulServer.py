@@ -21,6 +21,7 @@
 from mongoDB_driver_v2 import connectMongoDB, db_collection_document, get, put, post, patch, delete
 
 from flask import Flask, request, jsonify
+import json
 
 # Build flask app
 app = Flask(__name__)
@@ -83,7 +84,8 @@ def handle_request(path):
             'limitToLast': request.args.get('limitToLast') if request.args.get('limitToLast') else None,
             'equalTo': request.args.get('equalTo'),
             'startAt': request.args.get('startAt'),
-            'endAt': request.args.get('endAt')
+            'endAt': request.args.get('endAt'), 
+            'print': request.args.get('print')
         }
 
         print(f"Filter Params1: {filter_params}")
@@ -93,13 +95,30 @@ def handle_request(path):
         filter_params = {key: str(value) for key, value in filter_params.items()}
         filter_params = {k: v.replace('"', '') for k, v in filter_params.items()}
 
+        printPrettyFlag = False
+        if 'print' in filter_params:
+            printPrettyFlag = True
+            del filter_params['print']
+
         print(f"Filter Params2: {filter_params}")
 
         get_result = get(collection, documentFilter, jsonPath, filter=filter_params if filter_params else None)
         
         print("Log: GET Executed")
         print(f"Log: get_result = {get_result}")
-        return str(get_result) + "\n"
+
+        if jsonPath == '':
+            get_result = dict(get_result)
+            del get_result["_id"]
+        else:
+            if printPrettyFlag == True:
+                get_result = json.dumps(get_result, indent=4)
+            else: 
+                get_result = str(get_result)
+
+        return f"{get_result}\n"
+        
+        # return str(get_result) + "\n"
     
     # curl -X POST 'http://127.0.0.1:5000/users/' -d '{"106": {"name": "Amanda", "age": 22}}'
     elif request.method == 'POST':
@@ -136,7 +155,7 @@ def handle_request(path):
     
     # curl -X DELETE 'http://127.0.0.1:5000/users/105/'
     elif request.method == 'DELETE':
-        get_result = get(collection, documentFilter, jsonPath, filter=None)[0]
+        get_result = get(collection, documentFilter, jsonPath, filter=None)
         print(f"Log: get_result that is delete {get_result}")
         delete(collection, documentFilter, jsonPath)
         print("Log: DELETE Executed")

@@ -249,6 +249,9 @@ def get(collection, documentFilter, jsonPath, filter=None):
     print(f"Log flaskApp_RESTfulServer.py: Starting GET Filter...")
 
     if filter is None:
+
+        print(f"Log flaskApp_RESTfulServer.py: There is NO Filter in this request")
+
         return result
     else:
         filtered_result = helper_filter(result, filter)
