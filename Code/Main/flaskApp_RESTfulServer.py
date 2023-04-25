@@ -1,4 +1,14 @@
 # TODO:
+# 1/ need to verify orderBy="$value"
+# 2/ need to implement orderBy="some sort key"
+# 3/ may need to implement startAfter and endBefore
+# 4/ Clean up Repo AND create README file
+# 5/ write up final report
+# 6/ create 20 min DEMO video and upload to youtube publically
+# 7/ complete self assessment
+
+
+# ARCHIVE
 # 1/ Implement GET filter functions
 # 2/ Error handling for when request methods are incorrect, data is incorrect (needs to match Firebase)
 
