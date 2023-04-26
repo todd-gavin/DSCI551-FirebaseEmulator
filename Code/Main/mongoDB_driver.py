@@ -1,8 +1,7 @@
 import certifi
 import pymongo
 from bson.objectid import ObjectId
-import json
-from pymongo import ASCENDING, DESCENDING
+# from pymongo import ASCENDING, DESCENDING
 
 ##########################################################
 # CONNECT TO MONGODB w/ DRIVER
@@ -48,15 +47,19 @@ def db_collection_document(client, db_name, collection_name, objectId):
 
 # Sort by numbers, than letters, than special characters, and then finally datatype
 def custom_sort_key(item):
-    key = list(item.keys())[0]
-    if key.isdigit():
-        return (0, int(key))
-    elif key.isalpha():
-        return (1, key)
-    elif isinstance(list(item.values())[0], (dict, list, tuple)):
-        return (3, key)
-    else:
-        return (2, key)
+    try:
+        key = list(item.keys())[0]
+    except: 
+        key = item
+    finally: 
+        if str(key).isdigit():
+            return (0, int(key))
+        elif key.isalpha():
+            return (1, key)
+        elif isinstance(list(item.values())[0], (dict, list, tuple)):
+            return (3, key)
+        else:
+            return (2, key)
     
 def helper_filter(data, filter_params):
 
@@ -124,16 +127,15 @@ def helper_filter(data, filter_params):
 
                 flag = False
                 for item in final_list:
-                    item_key = next(iter(item))
+                    if isinstance(final_list, str):
+                        item_key = final_list
+                    else: 
+                        try:
+                            item_key = next(iter(item))
+                        except:
+                            item_key = item
+
                     print(f"Log monogDB_driver.py: item_key = {item_key}")
-
-                    # if (str(item_key) == str(startAt) or float(item_key) >= float(startAt)) and flag == False:
-
-                    # if (str(item_key) == str(startAt) or (isinstance(item_key, (int, float)) and float(item_key) >= float(startAt))) and flag == False:
-                    #     flag = True
-                    #     startAt_list.append(item)
-                    # elif flag == True:
-                    #     startAt_list.append(item)
 
                     try:
                         item_key = float(item_key)
@@ -166,7 +168,14 @@ def helper_filter(data, filter_params):
 
                 flag = False
                 for item in final_list:
-                    item_key = next(iter(item))
+                    if isinstance(final_list, str):
+                        item_key = final_list
+                    else: 
+                        try:
+                            item_key = next(iter(item))
+                        except:
+                            item_key = item
+
                     print(f"Log monogDB_driver.py: item_key = {item_key}")
                     
                     # if (str(item) != str(endAt) or float(item) <= float(endAt)) and flag == False:

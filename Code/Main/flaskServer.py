@@ -107,9 +107,10 @@ def handle_request(path):
         filter_params = {k: v.replace('"', '') for k, v in filter_params.items()}
 
         printPrettyFlag = False
-        if 'print' in filter_params:
+        if filter_params.get('print') == 'pretty':
             printPrettyFlag = True
             del filter_params['print']
+            print("Log: Pretty print activated")
 
         print(f"Filter Params2: {filter_params}")
 
@@ -121,11 +122,11 @@ def handle_request(path):
         if jsonPath == '':
             get_result = dict(get_result)
             del get_result["_id"]
-        else:
-            if printPrettyFlag == True:
-                get_result = json.dumps(get_result, indent=4)
-            else: 
-                get_result = str(get_result)
+
+        if printPrettyFlag == True:
+            get_result = json.dumps(get_result, indent=4)
+        else: 
+            get_result = str(get_result)
 
         return f"{get_result}\n"
         
