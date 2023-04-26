@@ -2,6 +2,8 @@
 
 ## Purpose
 
+# `TODO`
+
 ## File Structure
 - The program code is stored inside the directory `Code/Main/`
 - There are two python files that work together to emulate Firebase's Realtime Database using Flask and MongoDB:
@@ -9,6 +11,8 @@
     - `mongoDB_driver.py`: This file reads and writes data from and to the MongoDB Atlas instance.
 
 ## Implementation
+
+# `TODO`
 
 ## Dependencies
 1. Note: This code has been tested and operated on a Apple Silicon M1 chip. Other hardware has not been tested.
@@ -26,6 +30,8 @@
 3. In a new terminal window, begin executing CURL commands to Read and Write data from and to the MongoDb instance.
 
 ## Learning Experiences
+
+# `TODO`
 
 ## DEMO CURL Commands
 
@@ -49,16 +55,20 @@
 ```
 
 #### Error Handling:
+```sh
 1. curl -X GET 'http://127.0.0.1:5000/users.json?equalTo=age'
 2. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&limitToFirst=2&limitToLast=3'
 3. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&equalTo=102&startAt=13'
 4. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="name"'
+```
 
 #### Write Data with PUT, POST, PATCH and DELETE:
+```sh
 1. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"109": {"name": "Miles", "age": 36}}
 2. curl -X PUT 'http://127.0.0.1:5000/users/110.json' -d '{"name": "Jenny", "age": 20}'
 3. curl -X PATCH 'http://127.0.0.1:5000/users/102.json' -d '{"name": "Amanda", "location": "California"}'
 4. curl -X DELETE 'http://127.0.0.1:5000/users/110.json'
+```
 
 
 
