@@ -29,7 +29,7 @@
 
 ## DEMO CURL Commands
 
-### GET Commands with Filter Parameters
+#### GET Commands with Filter Parameters
 1. curl 'http://127.0.0.1:5000/.json'
 2. curl -X GET 'http://127.0.0.1:5000/.json'
 3. curl -X GET 'http://127.0.0.1:5000/.json?print=pretty'
@@ -43,13 +43,13 @@
 curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$value"&print=pretty'
 curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$key"&print=pretty'
 
-### Error Handling:
+#### Error Handling:
 1. curl -X GET 'http://127.0.0.1:5000/users.json?equalTo=age'
 2. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&limitToFirst=2&limitToLast=3'
 3. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&equalTo=102&startAt=13'
 4. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="name"'
 
-### Write Data with PUT, POST, PATCH and DELETE:
+#### Write Data with PUT, POST, PATCH and DELETE:
 1. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"109": {"name": "Miles", "age": 36}}
 2. curl -X PUT 'http://127.0.0.1:5000/users/110.json' -d '{"name": "Jenny", "age": 20}'
 3. curl -X PATCH 'http://127.0.0.1:5000/users/102.json' -d '{"name": "Amanda", "location": "California"}'
