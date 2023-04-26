@@ -29,7 +29,8 @@
 
 ## DEMO CURL Commands
 
-#### GET Commands with Filter Parameters
+#### GET Commands with Filter Parameters:
+```sh
 1. curl 'http://127.0.0.1:5000/.json'
 2. curl -X GET 'http://127.0.0.1:5000/.json'
 3. curl -X GET 'http://127.0.0.1:5000/.json?print=pretty'
@@ -39,9 +40,13 @@
 7. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&startAt=102&endAt=106'
 8. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&startAt=102&endAt=106&limitToFirst=2'
 9. curl -X GET 'http://127.0.0.1:5000/users.json?orderBy="$key"&startAt=102&endAt=106&limitToLast=2'
-
-curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$value"&print=pretty'
-curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$key"&print=pretty'
+10. curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$key"&print=pretty'
+11. curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$key"&limitToFirst=2&print=pretty'
+12. curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$value"&print=pretty'
+13. curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$value"&startAt=30&print=pretty'
+14. curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$value"&limitToFirst=2&startAt=30&print=pretty'
+15. curl -X GET 'http://127.0.0.1:5000/users/102.json?orderBy="$key"&print=pretty'
+```
 
 #### Error Handling:
 1. curl -X GET 'http://127.0.0.1:5000/users.json?equalTo=age'
