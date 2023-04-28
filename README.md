@@ -130,7 +130,7 @@ This code effectively implements a RESTful API to communicate with a MongoDB dat
 
 #### Write Data with PUT, POST, PATCH and DELETE:
 ```sh
-1. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"109": {"name": "Miles", "age": 36}}
+1. curl -X POST 'http://127.0.0.1:5000/users.json' -d '{"109": {"name": "Miles", "age": 36}}'
 2. curl -X PUT 'http://127.0.0.1:5000/users/110.json' -d '{"name": "Jenny", "age": 20}'
 3. curl -X PATCH 'http://127.0.0.1:5000/users/102.json' -d '{"name": "Amanda", "location": "California"}'
 4. curl -X DELETE 'http://127.0.0.1:5000/users/110.json'
