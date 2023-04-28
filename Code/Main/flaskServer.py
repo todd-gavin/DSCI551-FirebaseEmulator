@@ -42,7 +42,6 @@ client = connectMongoDB()
 
 # Establish the database, collection, and document that data will be read/written from/to
 db, collection, documentFilter = db_collection_document(client, 'firebaseRealtimeDatabase', 'firebaseCollection', '643c926ac5712e741b10398a')
-# print(f"db: {db}\ncollection: {collection}\ndocumentFilter:{documentFilter}")
 
 # Set request content-type to application/json 
 @app.before_request
@@ -58,7 +57,7 @@ def handle_request(path):
     # Acces global variables to connect to MongoDB
     global collection
     global documentFilter
-    # print(f"Log:\ncollection: {collection}\n\ndocumentFilter:{documentFilter}\n\n")
+    print(f"Log: collection: {collection}, documentFilter:{documentFilter}")
 
     # Get the path paramters to define where to read/write data from/to
     path_params = path.split('/')
@@ -81,12 +80,6 @@ def handle_request(path):
 
     # curl -X GET 'http://127.0.0.1:5000/'
     # curl -X GET 'http://127.0.0.1:5000/users/'
-    # if request.method == 'GET' or request.method == '':
-    #     get_result = get(collection, documentFilter, jsonPath, filter=None)[0]
-    #     print("Log: GET Executed")
-    #     print(f"Log: get_result = {get_result}")
-    #     return str(get_result) + "\n"
-    
     if request.method == 'GET' or request.method == '':
         # Extract filter parameters from URL
         filter_params = {
@@ -129,8 +122,6 @@ def handle_request(path):
             get_result = str(get_result)
 
         return f"{get_result}\n"
-        
-        # return str(get_result) + "\n"
     
     # curl -X POST 'http://127.0.0.1:5000/users/' -d '{"106": {"name": "Amanda", "age": 22}}'
     elif request.method == 'POST':
@@ -141,7 +132,6 @@ def handle_request(path):
             print('Log: POST request received without data')
         print("Log: POST Executed")
         return str(data) + '\n'
-        # return str(data) + '\nPOST request received' + "\n"
     
     # curl -X PUT 'http://127.0.0.1:5000/users/' -d '{"105": {"name": "Amanda", "age": 22}}' 
     elif request.method == 'PUT':
@@ -152,7 +142,6 @@ def handle_request(path):
             print('Log: PUT request received without data')
         print("Log: PUT Executed")
         return str(data) + '\n'
-        # return str(data) + '\nPUT request received' + "\n"
     
     # curl -X PATCH 'http://127.0.0.1:5000/users/105/' -d '{"age": 26}' 
     elif request.method == "PATCH":
@@ -163,7 +152,6 @@ def handle_request(path):
             print('Log: PATCH request received without data')
         print("Log: PATCH Executed")
         return str(data) + '\n'
-        # return str(data) + '\nPATCH request received' + "\n"
     
     # curl -X DELETE 'http://127.0.0.1:5000/users/105/'
     elif request.method == 'DELETE':
@@ -172,7 +160,6 @@ def handle_request(path):
         delete(collection, documentFilter, jsonPath)
         print("Log: DELETE Executed")
         return 'null\n'
-        # return 'null \nDELETE request received' + "\n"    
     
     else:
         return 'Invalid request'

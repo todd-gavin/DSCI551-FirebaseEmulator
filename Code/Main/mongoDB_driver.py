@@ -1,7 +1,6 @@
 import certifi
 import pymongo
 from bson.objectid import ObjectId
-# from pymongo import ASCENDING, DESCENDING
 
 ##########################################################
 # CONNECT TO MONGODB w/ DRIVER
