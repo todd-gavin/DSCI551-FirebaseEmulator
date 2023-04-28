@@ -1,34 +1,3 @@
-# TODO:
-# https://piazza.com/class/lcnpg1xru9v6jg/post/678 
-# 1/ need to verify orderBy="$value"
-# 2/ need to implement orderBy="some sort key"
-# 3/ may need to implement startAfter and endBefore
-# 4/ Clean up Repo AND create README file
-# 5/ write up final report
-# 6/ create 20 min DEMO video and upload to youtube publically
-# 7/ complete self assessment
-
-
-# ARCHIVE
-# 1/ Implement GET filter functions
-# 2/ Error handling for when request methods are incorrect, data is incorrect (needs to match Firebase)
-
-# In-Class 10 min Demo (Monday, 4/24)
-# https://docs.google.com/spreadsheets/d/1t9p8zpgRczI_eaU93ITpNoTua_le2SixVLKsVrCm7ro/edit#gid=0 
-
-# 3/ Record 20 min Demo Video and upload to Youtube publicly (Friday, 4/28)
-# 4/ Complete Self Assessment Form part of final report (Friday, 4/28)
-# 5/ Write out final report, ReadMe file, and include source code (Friday, 4/28)
-
-# https://piazza.com/class/lcnpg1xru9v6jg/post/678
-
-# Need to handle this case fo data where its just a string
-# curl -X PUT 'https://dsci551-v1-default-rtdb.firebaseio.com/users/104/name.json' -d '"david smith sr"'
-# "david smith sr"
-
-##########
-# May stll need to implement pretty=json, startAfter, and endBefore, and sort by name field
-
 from mongoDB_driver import connectMongoDB, db_collection_document, get, put, post, patch, delete
 
 from flask import Flask, request
