@@ -25,7 +25,7 @@ This Python code implements a RESTful API using the Flask framework that interac
    - Set up the database, collection, and document filter for reading/writing data.
 
 3. Pre-process incoming requests:
-   - Use the `before_request` decorator to ensure the content-type of incoming POST, PATCH, and PUT requests is set to 'application/json'.
+   - Use the `before_request` decorator to ensure the content-type of incoming POST, PATCH, and PUT requests is set to `'application/json'`.
 
 4. Define the request handler function:
    - Create a single function, `handle_request`, to handle all incoming requests for the RESTful API.
@@ -41,32 +41,30 @@ This Python code implements a RESTful API using the Flask framework that interac
 5. Run the Flask application:
    - Use the `app.run()` function to start the Flask web server, specifying the desired port number (5000).
 
-This code effectively implements a RESTful API to communicate with a MongoDB database using the Flask web framework. The API enables users to perform various CRUD operations using CURL on the data stored in the MongoDB database, allowing for flexible and efficient data management.
-
 ### `mongoDB_driver.py`
 This code provides an interface for connecting to a MongoDB server, as well as performing CRUD (Create, Read, Update, and Delete) operations on the data stored in the database. The code uses the `pymongo` library to interact with MongoDB and `certifi` library for secure SSL/TLS certificate handling. The architecture of this code is as follows:
 
 1. Connection to MongoDB:
-   The `connectMongoDB` function is responsible for connecting to a MongoDB instance using a URI that includes the username, password, and other necessary information for authentication. The `certifi.where()` method is used to obtain the CA certificate needed for SSL/TLS communication. The `ping` command is used to check if the connection was successful.
+   - The `connectMongoDB` function is responsible for connecting to a MongoDB instance using a URI that includes the username, password, and other necessary information for authentication. The `certifi.where()` method is used to obtain the CA certificate needed for SSL/TLS communication. The `ping` command is used to check if the connection was successful.
 
 2. Accessing a specific database, collection, and document:
-   The `db_collection_document` function takes the `client`, `db_name`, `collection_name`, and `objectId` as inputs and returns references to the database, collection, and a filter for the specified document.
+   - The `db_collection_document` function takes the `client`, `db_name`, `collection_name`, and `objectId` as inputs and returns references to the database, collection, and a filter for the specified document.
 
 3. Custom sorting:
-   The `custom_sort_key` function sorts the data according to the following order: numbers, letters, special characters, and data types (like dicts, lists, and tuples).
+   - The `custom_sort_key` function sorts the data according to the following order: numbers, letters, special characters, and data types (like dicts, lists, and tuples).
 
 4. Filtering data:
-   The `helper_filter` function applies filtering operations based on the provided filter parameters. The function handles various cases like ordering by keys or values, equalTo, limitToFirst, limitToLast, startAt, and endAt, among others.
+   - The `helper_filter` function applies filtering operations based on the provided filter parameters. The function handles various cases like ordering by keys or values, equalTo, limitToFirst, limitToLast, startAt, and endAt, among others.
 
 5. CRUD operations:
-   The code contains functions to perform CRUD operations on the MongoDB data:
-   - `get`: Retrieves data from the collection based on the document filter, JSON path, and additional filter parameters. It uses the `helper_filter` function to apply the required filters.
-   - `put`: Updates the data in the MongoDB collection by replacing the specified JSON path with the new data. The `helper_Update_PUT` function is used to create the update command.
-   - `post`: Adds new data to the MongoDB collection, creating a new unique key if necessary. The `helper_Update_POST` function is used to create the update command.
-   - `patch`: Updates the data at the specified JSON path, either overwriting the existing data or creating new data if it doesn't exist.
-   - `delete`: Removes data at the specified JSON path from the MongoDB collection.
+   - The code contains functions to perform CRUD operations on the MongoDB data:
+        - `get`: Retrieves data from the collection based on the document filter, JSON path, and additional filter parameters. It uses the `helper_filter` function to apply the required filters.
+        - `put`: Updates the data in the MongoDB collection by replacing the specified JSON path with the new data. The `helper_Update_PUT` function is used to create the update command.
+        - `post`: Adds new data to the MongoDB collection, creating a new unique key if necessary. The `helper_Update_POST` function is used to create the update command.
+        - `patch`: Updates the data at the specified JSON path, either overwriting the existing data or creating new data if it doesn't exist.
+        - `delete`: Removes data at the specified JSON path from the MongoDB collection.
 
-This code can be used to create a RESTful API server that interacts with a MongoDB database, allowing clients to perform CRUD operations on the data stored in the database.
+This code effectively implements a RESTful API to communicate with a MongoDB database using the Flask web framework. The API enables users to perform various CRUD operations using CURL on the data stored in the MongoDB database, allowing for flexible and efficient data management.
 
 ## Dependencies
 1. Note: This code has been tested and operated on a Apple Silicon M1 chip. Other hardware has not been tested.
