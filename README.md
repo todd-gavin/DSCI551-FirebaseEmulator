@@ -1,7 +1,7 @@
 # Emulating Firebase's Realtime Database using Flask and MongoDB
 
 ## Purpose
-The purpose of this project was to emulate a large data storage system such as Firebase's Realtime Database using alternate systems such as MongoDB's NoSQL databse and Python Flask for the RESTful server.
+The purpose of this project was to emulate a large data storage system such as Firebase's Realtime Database using alternative systems such as MongoDB's NoSQL database and Python Flask for the RESTful server.
 
 ## File Structure
 - The program code is stored inside the directory `Code/Main/`
